@@ -78,11 +78,12 @@ export default function Home() {
               transition={{ delay: 0.4, duration: 0.8 }}
               className="flex-1 w-full relative h-[500px] lg:h-[600px] hidden md:block"
             >
-               {/* Abstract Background Blur */}
-               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-gradient-to-tr from-nebula-300/20 via-transparent to-nebula-500/10 blur-3xl rounded-full" />
+               {/* Abstract Background Blur (Lavender & Soft Blue Nebula Glow) */}
+               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-gradient-to-tr from-[#B2BFFF]/30 via-purple-300/20 to-[#6B7BFF]/20 blur-3xl rounded-full" />
+               <div className="absolute top-1/4 right-1/4 w-64 h-64 bg-indigo-400/10 blur-[80px] rounded-full mix-blend-multiply" />
                
                {/* Landscape Mockup */}
-               <div className="absolute top-1/2 left-0 -translate-y-1/2 w-[450px] aspect-[4/3] bg-white rounded-2xl shadow-2xl shadow-eclipse-900/10 border border-eclipse-900/5 p-2 rotate-[-2deg] transition-transform hover:rotate-0 hover:scale-105 duration-500 overflow-hidden">
+               <div className="absolute top-1/2 left-0 -translate-y-1/2 w-[450px] aspect-[4/3] bg-white/40 backdrop-blur-xl rounded-2xl shadow-2xl shadow-eclipse-900/10 border border-white/60 p-2 rotate-[-2deg] transition-transform hover:rotate-0 hover:scale-105 duration-500 overflow-hidden">
                   <div className="w-full h-full bg-[#F5F2EE] rounded-xl overflow-hidden flex flex-col relative">
                      <div className="h-6 border-b border-black/5 flex items-center px-3 gap-1.5">
                         <div className="w-2 h-2 rounded-full bg-red-400/80" />
@@ -101,7 +102,7 @@ export default function Home() {
                </div>
 
                {/* Portrait Mobile Mockup */}
-               <div className="absolute top-1/2 right-4 -translate-y-[45%] w-[240px] aspect-[9/19] bg-white rounded-[2rem] shadow-2xl shadow-eclipse-900/20 border-4 border-eclipse-900 p-1 rotate-[4deg] transition-transform hover:rotate-0 hover:scale-105 duration-500 overflow-hidden z-10">
+               <div className="absolute top-1/2 right-4 -translate-y-[45%] w-[240px] aspect-[9/19] bg-white/60 backdrop-blur-2xl rounded-[2rem] shadow-[0_30px_60px_-15px_rgba(140,155,255,0.3)] border-[4px] border-white/80 p-1.5 rotate-[4deg] transition-transform hover:rotate-0 hover:scale-105 duration-500 overflow-hidden z-10">
                   <div className="w-full h-full bg-[#FAF9F6] rounded-[1.5rem] overflow-hidden flex flex-col relative">
                      <div className="absolute top-0 inset-x-0 h-6 flex justify-center z-20">
                         <div className="w-20 h-4 bg-eclipse-900 rounded-b-xl" />
