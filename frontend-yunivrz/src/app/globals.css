@@ -1,0 +1,25 @@
+@import "tailwindcss";
+
+@theme {
+  --color-space-50: #F8F9FB;
+  --color-space-100: #F0F2F6;
+  --color-space-800: #1C1E26;
+  --color-space-900: #13151A;
+
+  --color-eclipse-900: #0B0C10;
+  --color-eclipse-800: #1A1C23;
+  --color-eclipse-700: #333642;
+
+  --color-nebula-300: #B2BFFF;
+  --color-nebula-500: #6B7BFF;
+  --color-nebula-700: #424FC4;
+
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-heading: "Space Grotesk", "Inter", system-ui, sans-serif;
+}
+
+@layer base {
+  body {
+    @apply bg-space-50 text-eclipse-900 font-sans antialiased selection:bg-nebula-300 selection:text-eclipse-900;
+  }
+}
