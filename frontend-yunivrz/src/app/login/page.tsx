@@ -26,7 +26,7 @@ export default function LoginPage() {
           </span>
         </Link>
         <Link href="/" className="absolute top-12 right-8 md:right-16 lg:right-24 xl:right-32 text-sm font-medium text-eclipse-700 hover:text-eclipse-900 transition-colors flex items-center gap-2">
-          &larr; Back to studio
+          &larr; Kembali ke web
         </Link>
 
         <motion.div
@@ -35,39 +35,39 @@ export default function LoginPage() {
           className="max-w-md w-full mx-auto"
         >
           <div className="text-xs font-bold tracking-widest uppercase text-nebula-500 mb-6 bg-nebula-500/10 inline-block px-3 py-1 rounded-full">
-            YOUR CLIENT SPACE
+            RUANG KLIEN
           </div>
           <h1 className="text-4xl font-heading font-bold text-eclipse-900 mb-4 tracking-tight">
-            Good to have you back.
+            Senang melihat Anda kembali.
           </h1>
           <p className="text-eclipse-700 text-sm mb-10">
-            Your ideas, updates and next steps. All in one place.
+            Ide, *update*, dan langkah proyek Anda selanjutnya. Semua di satu tempat.
           </p>
 
           {/* Tabs */}
           <div className="flex p-1 bg-eclipse-900/5 rounded-xl mb-8">
             <button className="flex-1 py-2.5 bg-white text-eclipse-900 text-sm font-medium rounded-lg shadow-sm border border-eclipse-900/5">
-              Sign In
+              Masuk
             </button>
             <button className="flex-1 py-2.5 text-eclipse-700 hover:text-eclipse-900 text-sm font-medium rounded-lg transition-colors">
-              Create an account
+              Buat akun
             </button>
           </div>
 
           <form onSubmit={handleLogin} className="space-y-6">
             <div>
-              <label className="block text-sm font-bold text-eclipse-900 mb-2">Email address</label>
+              <label className="block text-sm font-bold text-eclipse-900 mb-2">Alamat Email</label>
               <input 
                 type="email" 
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="hello@example.com"
+                placeholder="halo@contoh.com"
                 className="w-full px-4 py-3 rounded-xl border border-eclipse-900/10 bg-white focus:outline-none focus:ring-2 focus:ring-nebula-500/50 focus:border-nebula-500 transition-all text-sm"
                 required
               />
             </div>
             <div>
-              <label className="block text-sm font-bold text-eclipse-900 mb-2">Password</label>
+              <label className="block text-sm font-bold text-eclipse-900 mb-2">Kata Sandi</label>
               <input 
                 type="password" 
                 value={password}
@@ -81,16 +81,16 @@ export default function LoginPage() {
             <div className="flex items-center justify-between">
               <label className="flex items-center gap-2 cursor-pointer">
                 <input type="checkbox" className="w-4 h-4 rounded border-eclipse-900/20 text-nebula-500 focus:ring-nebula-500/50" />
-                <span className="text-sm text-eclipse-700">Keep me signed in</span>
+                <span className="text-sm text-eclipse-700">Ingat saya</span>
               </label>
-              <a href="#" className="text-sm text-nebula-500 font-medium hover:text-eclipse-900 transition-colors">Forgot password?</a>
+              <a href="#" className="text-sm text-nebula-500 font-medium hover:text-eclipse-900 transition-colors">Lupa sandi?</a>
             </div>
 
             <button 
               type="submit"
               className="w-full py-4 bg-eclipse-900 hover:bg-eclipse-800 text-white font-medium rounded-xl transition-all shadow-[0_10px_20px_-10px_rgba(11,12,16,0.3)]"
             >
-              Sign In
+              Masuk
             </button>
             
             <button 
@@ -103,12 +103,12 @@ export default function LoginPage() {
                 <path fill="currentColor" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
                 <path fill="currentColor" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
               </svg>
-              Continue with Google
+              Lanjutkan dengan Google
             </button>
           </form>
           
           <div className="mt-12 text-center text-xs text-eclipse-700/60">
-            By continuing, you agree to our Terms of Service and Privacy Policy.
+            Dengan masuk, Anda menyetujui Syarat Ketentuan dan Kebijakan Privasi kami.
           </div>
         </motion.div>
 
@@ -120,7 +120,7 @@ export default function LoginPage() {
          
          <div className="absolute top-12 right-12 z-20">
             <div className="text-xs font-bold tracking-widest uppercase text-nebula-500 bg-white/50 backdrop-blur px-4 py-2 rounded-full shadow-sm">
-              A LITTLE SPACE FOR BIG POSSIBILITIES
+              RUANG KECIL UNTUK KEMUNGKINAN BESAR
             </div>
          </div>
 
@@ -133,13 +133,13 @@ export default function LoginPage() {
          {/* Overlay Card */}
          <div className="mt-auto relative z-20 w-full max-w-xl mx-auto bg-white/70 backdrop-blur-xl border border-white p-12 rounded-[2.5rem] shadow-[0_20px_60px_-15px_rgba(140,155,255,0.15)]">
             <h2 className="text-4xl font-heading font-bold text-eclipse-900 leading-tight mb-6 tracking-tight">
-              Your next chapter,<br />a little closer.
+              Babak baru Anda,<br />selangkah lebih dekat.
             </h2>
             <p className="text-eclipse-700 text-sm leading-relaxed mb-8">
-              Follow your project, share your thoughts, and watch your story come to life. We're glad you're here.
+              Ikuti perkembangan proyek Anda, bagikan pemikiran Anda, dan saksikan cerita Anda menjadi nyata. Senang Anda ada di sini.
             </p>
             <p className="text-nebula-500 text-xs font-medium uppercase tracking-widest">
-              Thoughtfully digital. Deeply personal.
+              Digital yang bermakna. Sentuhan yang personal.
             </p>
          </div>
       </div>

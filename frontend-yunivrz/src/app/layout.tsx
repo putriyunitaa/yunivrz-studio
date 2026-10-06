@@ -8,8 +8,8 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], variable: "--font-heading" });
 
 export const metadata: Metadata = {
-  title: "Yunivrz Studio - Independent Digital Practice",
-  description: "A premium headless web portal for Yunivrz Studio",
+  title: "Yunivrz Studio - Praktik Digital Independen",
+  description: "Portal web premium headless untuk Yunivrz Studio",
 };
 
 export default function RootLayout({
@@ -18,7 +18,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable}`}>
+    <html lang="id" className={`${inter.variable} ${spaceGrotesk.variable}`}>
       <body className="antialiased flex flex-col min-h-screen">
         <Navbar />
         <main className="flex-1">

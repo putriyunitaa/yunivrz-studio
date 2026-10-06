@@ -16,7 +16,7 @@ export default function AboutPage() {
               animate={{ opacity: 1, y: 0 }}
               className="text-xs font-bold tracking-widest uppercase text-nebula-500 mb-4"
             >
-              A. Public Storefront / The Studio
+              A. Area Publik / Studio
             </motion.div>
             <motion.h1 
               initial={{ opacity: 0, y: 20 }}
@@ -24,8 +24,8 @@ export default function AboutPage() {
               transition={{ delay: 0.1 }}
               className="text-5xl md:text-7xl font-heading font-bold text-eclipse-900 mb-8 tracking-tight leading-[1.1]"
             >
-              An independent studio.<br />
-              A wider universe.
+              Sebuah studio independen.<br />
+              Semesta yang lebih luas.
             </motion.h1>
             <motion.p 
               initial={{ opacity: 0, y: 20 }}
@@ -33,7 +33,7 @@ export default function AboutPage() {
               transition={{ delay: 0.2 }}
               className="text-lg text-eclipse-700 max-w-md mb-8 leading-relaxed"
             >
-              Yunivrz Studio is an independent digital practice crafting thoughtful, premium experiences. Based in Jakarta, connected everywhere. Since 2021, I've helped people and brands turn their stories into digital experiences worth remembering.
+              Yunivrz Studio adalah studio digital independen yang merancang pengalaman premium dan penuh perhatian. Berbasis di Jakarta, terhubung ke mana saja. Sejak 2021, saya telah membantu banyak orang dan *brand* mengubah cerita mereka menjadi pengalaman digital yang pantas dikenang.
             </motion.p>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -44,7 +44,7 @@ export default function AboutPage() {
                 href="https://wa.me/1234567890" 
                 className="inline-flex justify-center items-center px-8 py-3 rounded-full bg-white text-eclipse-900 border border-eclipse-900/10 font-medium transition-all hover:bg-space-100 hover:shadow-sm"
               >
-                Start a conversation &rarr;
+                Mulai berdiskusi &rarr;
               </Link>
             </motion.div>
           </div>
@@ -67,38 +67,38 @@ export default function AboutPage() {
       <section className="bg-eclipse-900/5 py-32 border-y border-eclipse-900/5">
         <div className="container mx-auto px-6 max-w-7xl">
           <div className="text-xs font-bold tracking-widest uppercase text-nebula-500 mb-8">
-            Our Manifesto
+            Manifesto Kami
           </div>
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-heading font-medium text-eclipse-900 leading-[1.2] max-w-4xl mb-20 tracking-tight">
-            We believe the best digital experiences don't ask for attention. They earn a connection.
+            Kami percaya pengalaman digital terbaik tidak mengemis perhatian. Mereka membangun koneksi.
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
             <div>
-              <h3 className="text-xl font-bold text-eclipse-900 mb-4">Human, first.</h3>
-              <p className="text-eclipse-700 text-sm leading-relaxed">I begin with people, not pixels. Your unique story and personality shape every design decision.</p>
+              <h3 className="text-xl font-bold text-eclipse-900 mb-4">Manusia, pertama.</h3>
+              <p className="text-eclipse-700 text-sm leading-relaxed">Saya memulai segalanya dari manusia, bukan piksel. Cerita dan kepribadian unik Anda akan membentuk setiap keputusan desain.</p>
             </div>
             <div>
-              <h3 className="text-xl font-bold text-eclipse-900 mb-4">Less, but better.</h3>
-              <p className="text-eclipse-700 text-sm leading-relaxed">I make space for the things that matter. Every detail has a clear, intentional purpose.</p>
+              <h3 className="text-xl font-bold text-eclipse-900 mb-4">Sedikit, tapi lebih baik.</h3>
+              <p className="text-eclipse-700 text-sm leading-relaxed">Saya memberi ruang untuk hal-hal yang benar-benar bermakna. Setiap detail kecil selalu memiliki tujuan yang jelas.</p>
             </div>
             <div>
-              <h3 className="text-xl font-bold text-eclipse-900 mb-4">Crafted personally.</h3>
-              <p className="text-eclipse-700 text-sm leading-relaxed">As an independent studio, you work directly with the creator. No layers, just focused expertise.</p>
+              <h3 className="text-xl font-bold text-eclipse-900 mb-4">Dibuat secara personal.</h3>
+              <p className="text-eclipse-700 text-sm leading-relaxed">Sebagai studio independen, Anda berkolaborasi langsung dengan sang pembuat. Tanpa perantara, hanya keahlian yang terfokus.</p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* The Creator Section (Fixed from 4 people to 1 solo expert) */}
+      {/* The Creator Section */}
       <section className="py-32 bg-space-50">
         <div className="container mx-auto px-6 max-w-7xl">
           <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
             <h2 className="text-4xl md:text-5xl font-heading font-bold text-eclipse-900 tracking-tight">
-              The creator behind the craft.
+              Kreator di balik karya.
             </h2>
             <p className="text-eclipse-700 max-w-xs text-sm">
-              One shared obsession with getting the details right.
+              Satu visi yang sama tentang menyempurnakan setiap detail kecil.
             </p>
           </div>
 
@@ -107,18 +107,18 @@ export default function AboutPage() {
                {/* Profile Image Placeholder */}
                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent z-10" />
                <div className="absolute bottom-8 left-8 z-20">
-                  <h3 className="text-2xl font-bold text-space-50 mb-1">Your Name</h3>
+                  <h3 className="text-2xl font-bold text-space-50 mb-1">Nama Anda</h3>
                   <p className="text-space-50/80 text-sm">Founder & Lead Designer</p>
                </div>
             </div>
             <div className="max-w-md">
                <p className="text-lg text-eclipse-700 leading-relaxed mb-8">
-                 Hi, I'm the founder of Yunivrz Studio. I built this independent practice to bridge the gap between highly personal storytelling and premium digital execution.
+                 Halo, saya adalah *founder* dari Yunivrz Studio. Saya membangun studio independen ini untuk menjembatani jarak antara cerita personal yang intim dengan eksekusi digital yang premium.
                </p>
                <p className="text-lg text-eclipse-700 leading-relaxed mb-8">
-                 When you work with Yunivrz, you're not getting a junior designer or an account manager. You're collaborating directly with a seasoned expert dedicated to making your project perfect.
+                 Ketika Anda bekerja bersama Yunivrz, Anda tidak sedang berhadapan dengan desainer junior atau manajer akun. Anda sedang berkolaborasi langsung dengan tenaga ahli yang berdedikasi untuk menyempurnakan proyek Anda.
                </p>
-               <Link href="/catalog" className="text-nebula-500 font-medium hover:text-eclipse-900 transition-colors">View my recent work &rarr;</Link>
+               <Link href="/catalog" className="text-nebula-500 font-medium hover:text-eclipse-900 transition-colors">Lihat karya terbaru saya &rarr;</Link>
             </div>
           </div>
         </div>
