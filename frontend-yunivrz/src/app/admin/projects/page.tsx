@@ -8,27 +8,27 @@ const kanbanColumns = [
     title: "Pending",
     count: 3,
     cards: [
-      { id: 1, title: "Ruang Collective", category: "Milestones", progress: 0, date: "20 Oct", clientInitials: "BS", designerInitials: "YS" },
-      { id: 2, title: "Aulia & Farhan", category: "Micro-Moments", progress: 0, date: "28 Oct", clientInitials: "AR", designerInitials: "YS" },
-      { id: 3, title: "Nusa member portal", category: "Custom Solutions", progress: 0, date: "18 Nov", clientInitials: "NC", designerInitials: "YS" },
+      { id: 1, title: "Ruang Collective", category: "Milestones", progress: 0, date: "20 Oct", clientInitials: "BS", designerInitials: "YS", completed: false },
+      { id: 2, title: "Aulia & Farhan", category: "Micro-Moments", progress: 0, date: "28 Oct", clientInitials: "AR", designerInitials: "YS", completed: false },
+      { id: 3, title: "Nusa member portal", category: "Custom Solutions", progress: 0, date: "18 Nov", clientInitials: "NC", designerInitials: "YS", completed: false },
     ]
   },
   {
     title: "In Progress",
     count: 6,
     cards: [
-      { id: 4, title: "Sagara Living", category: "Milestones", progress: 48, date: "24 Oct", clientInitials: "DW", designerInitials: "YS" },
-      { id: 5, title: "Kopi Kala", category: "Milestones", progress: 72, date: "18 Oct", clientInitials: "IP", designerInitials: "YS" },
-      { id: 6, title: "Aksara Studio", category: "Milestones", progress: 35, date: "30 Oct", clientInitials: "BS", designerInitials: "YS" },
+      { id: 4, title: "Sagara Living", category: "Milestones", progress: 48, date: "24 Oct", clientInitials: "DW", designerInitials: "YS", completed: false },
+      { id: 5, title: "Kopi Kala", category: "Milestones", progress: 72, date: "18 Oct", clientInitials: "IP", designerInitials: "YS", completed: false },
+      { id: 6, title: "Aksara Studio", category: "Milestones", progress: 35, date: "30 Oct", clientInitials: "BS", designerInitials: "YS", completed: false },
     ]
   },
   {
     title: "Revision",
     count: 3,
     cards: [
-      { id: 7, title: "Anindya & Rizky", category: "Micro-Moments", progress: 65, date: "12 Oct", clientInitials: "AP", designerInitials: "YS" },
-      { id: 8, title: "Nusa storefront", category: "Custom Solutions", progress: 84, date: "16 Oct", clientInitials: "NC", designerInitials: "YS" },
-      { id: 9, title: "Dewi & Bagas", category: "Micro-Moments", progress: 80, date: "14 Oct", clientInitials: "DL", designerInitials: "YS" },
+      { id: 7, title: "Anindya & Rizky", category: "Micro-Moments", progress: 65, date: "12 Oct", clientInitials: "AP", designerInitials: "YS", completed: false },
+      { id: 8, title: "Nusa storefront", category: "Custom Solutions", progress: 84, date: "16 Oct", clientInitials: "NC", designerInitials: "YS", completed: false },
+      { id: 9, title: "Dewi & Bagas", category: "Micro-Moments", progress: 80, date: "14 Oct", clientInitials: "DL", designerInitials: "YS", completed: false },
     ]
   },
   {

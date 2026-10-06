@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 const invoices = [
   { id: "INV-0261", type: "DP", amount: "Rp 2,000,000", date: "28 Sep 2026", status: "Paid" },
