@@ -10,7 +10,6 @@ export default function LoginPage() {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    // Simulate login for now
     window.location.href = "/client/dashboard";
   };
 
@@ -18,15 +17,15 @@ export default function LoginPage() {
     <main className="min-h-screen flex w-full bg-space-50">
       
       {/* Left Form Side */}
-      <div className="w-full lg:w-1/2 flex flex-col justify-center px-8 md:px-16 lg:px-24 xl:px-32 relative z-10">
+      <div className="w-full lg:w-1/2 flex flex-col justify-center px-8 md:px-16 lg:px-24 xl:px-32 relative z-10 bg-white shadow-[20px_0_60px_rgba(11,12,16,0.02)]">
         
         <Link href="/" className="absolute top-12 left-8 md:left-16 lg:left-24 xl:left-32">
           <span className="font-heading text-xl font-bold tracking-tighter text-eclipse-900">
             yunivrz <span className="text-nebula-500">✦</span>
           </span>
         </Link>
-        <Link href="/" className="absolute top-12 right-8 md:right-16 lg:right-24 xl:right-32 text-sm font-medium text-eclipse-700 hover:text-eclipse-900 transition-colors flex items-center gap-2">
-          &larr; Kembali ke web
+        <Link href="/" className="absolute top-12 right-8 md:right-16 lg:right-24 xl:right-32 text-xs font-bold uppercase tracking-widest text-eclipse-700/60 hover:text-eclipse-900 transition-colors flex items-center gap-2">
+          &larr; Beranda
         </Link>
 
         <motion.div
@@ -35,67 +34,52 @@ export default function LoginPage() {
           className="max-w-md w-full mx-auto"
         >
           <div className="text-xs font-bold tracking-widest uppercase text-nebula-500 mb-6 bg-nebula-500/10 inline-block px-3 py-1 rounded-full">
-            RUANG KLIEN
+            PORTAL EKSKLUSIF
           </div>
           <h1 className="text-4xl font-heading font-bold text-eclipse-900 mb-4 tracking-tight">
-            Senang melihat Anda kembali.
+            Selamat datang kembali.
           </h1>
-          <p className="text-eclipse-700 text-sm mb-10">
-            Ide, *update*, dan langkah proyek Anda selanjutnya. Semua di satu tempat.
+          <p className="text-eclipse-700 text-sm mb-10 leading-relaxed">
+            Akses pembaruan draf, diskusi revisi, dan tagihan proyek Anda secara transparan dan aman dalam satu ruang privat.
           </p>
-
-          {/* Tabs */}
-          <div className="flex p-1 bg-eclipse-900/5 rounded-xl mb-8">
-            <button className="flex-1 py-2.5 bg-white text-eclipse-900 text-sm font-medium rounded-lg shadow-sm border border-eclipse-900/5">
-              Masuk
-            </button>
-            <button className="flex-1 py-2.5 text-eclipse-700 hover:text-eclipse-900 text-sm font-medium rounded-lg transition-colors">
-              Buat akun
-            </button>
-          </div>
 
           <form onSubmit={handleLogin} className="space-y-6">
             <div>
-              <label className="block text-sm font-bold text-eclipse-900 mb-2">Alamat Email</label>
+              <label className="block text-xs font-bold uppercase tracking-widest text-eclipse-900/60 mb-2">Alamat Email</label>
               <input 
                 type="email" 
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="halo@contoh.com"
-                className="w-full px-4 py-3 rounded-xl border border-eclipse-900/10 bg-white focus:outline-none focus:ring-2 focus:ring-nebula-500/50 focus:border-nebula-500 transition-all text-sm"
+                className="w-full px-5 py-4 rounded-2xl border border-eclipse-900/10 bg-space-50 focus:outline-none focus:ring-4 focus:ring-nebula-500/20 focus:border-nebula-500 transition-all text-sm font-medium"
                 required
               />
             </div>
             <div>
-              <label className="block text-sm font-bold text-eclipse-900 mb-2">Kata Sandi</label>
+              <div className="flex justify-between items-center mb-2">
+                 <label className="block text-xs font-bold uppercase tracking-widest text-eclipse-900/60">Kata Sandi</label>
+                 <a href="#" className="text-xs text-nebula-500 font-bold hover:text-eclipse-900 transition-colors">Lupa sandi?</a>
+              </div>
               <input 
                 type="password" 
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••••••"
-                className="w-full px-4 py-3 rounded-xl border border-eclipse-900/10 bg-white focus:outline-none focus:ring-2 focus:ring-nebula-500/50 focus:border-nebula-500 transition-all text-sm"
+                className="w-full px-5 py-4 rounded-2xl border border-eclipse-900/10 bg-space-50 focus:outline-none focus:ring-4 focus:ring-nebula-500/20 focus:border-nebula-500 transition-all text-sm font-medium"
                 required
               />
             </div>
 
-            <div className="flex items-center justify-between">
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" className="w-4 h-4 rounded border-eclipse-900/20 text-nebula-500 focus:ring-nebula-500/50" />
-                <span className="text-sm text-eclipse-700">Ingat saya</span>
-              </label>
-              <a href="#" className="text-sm text-nebula-500 font-medium hover:text-eclipse-900 transition-colors">Lupa sandi?</a>
-            </div>
-
             <button 
               type="submit"
-              className="w-full py-4 bg-eclipse-900 hover:bg-eclipse-800 text-white font-medium rounded-xl transition-all shadow-[0_10px_20px_-10px_rgba(11,12,16,0.3)]"
+              className="w-full py-4 bg-eclipse-900 hover:bg-eclipse-800 text-white text-sm font-bold rounded-2xl transition-all shadow-[0_15px_30px_-10px_rgba(11,12,16,0.3)] hover:-translate-y-0.5"
             >
-              Masuk
+              Masuk ke Dasbor
             </button>
             
             <button 
               type="button"
-              className="w-full py-4 bg-white border border-eclipse-900/10 text-eclipse-900 font-medium rounded-xl transition-all hover:bg-space-100 flex items-center justify-center gap-2"
+              className="w-full py-4 bg-white border border-eclipse-900/10 text-eclipse-900 text-sm font-bold rounded-2xl transition-all hover:bg-space-50 flex items-center justify-center gap-3"
             >
               <svg className="w-5 h-5" viewBox="0 0 24 24">
                 <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -107,41 +91,44 @@ export default function LoginPage() {
             </button>
           </form>
           
-          <div className="mt-12 text-center text-xs text-eclipse-700/60">
-            Dengan masuk, Anda menyetujui Syarat Ketentuan dan Kebijakan Privasi kami.
+          <div className="mt-12 text-center text-xs text-eclipse-700/50 max-w-[280px] mx-auto leading-relaxed">
+            Portal ini khusus untuk klien aktif Yunivrz Studio yang memiliki akses undangan.
           </div>
         </motion.div>
 
       </div>
 
-      {/* Right Visual Side */}
-      <div className="hidden lg:flex w-1/2 relative bg-space-100 overflow-hidden p-8">
-         <div className="absolute inset-0 bg-gradient-to-br from-nebula-300/40 via-space-50 to-nebula-500/20" />
+      {/* Right Visual Side (Stunning Abstract 3D Nebula with Glassmorphism) */}
+      <div className="hidden lg:flex w-1/2 relative bg-space-100 overflow-hidden items-center justify-center">
+         {/* Deep Nebula Gradient Background */}
+         <div className="absolute inset-0 bg-gradient-to-br from-purple-200/50 via-space-50 to-[#6B7BFF]/30" />
          
-         <div className="absolute top-12 right-12 z-20">
-            <div className="text-xs font-bold tracking-widest uppercase text-nebula-500 bg-white/50 backdrop-blur px-4 py-2 rounded-full shadow-sm">
-              RUANG KECIL UNTUK KEMUNGKINAN BESAR
+         {/* Floating Glassmorphism Orbs */}
+         <div className="absolute w-[600px] h-[600px] bg-gradient-to-tr from-[#B2BFFF] to-[#E5E9FF] rounded-full blur-[80px] opacity-60 animate-[pulse_8s_ease-in-out_infinite]" />
+         <div className="absolute w-[400px] h-[400px] bg-gradient-to-bl from-purple-400/40 to-pink-300/30 rounded-full blur-[60px] opacity-50 translate-x-1/2 -translate-y-1/4 animate-[spin_40s_linear_infinite]" />
+
+         {/* 3D Glass Object Centerpiece */}
+         <motion.div 
+           initial={{ scale: 0.9, opacity: 0 }}
+           animate={{ scale: 1, opacity: 1 }}
+           transition={{ duration: 1.5, ease: "easeOut" }}
+           className="relative z-20 w-[450px] h-[450px] rounded-[3rem] bg-white/20 backdrop-blur-3xl border border-white/50 shadow-[0_40px_80px_-20px_rgba(107,123,255,0.4)] flex items-center justify-center overflow-hidden rotate-[-4deg] hover:rotate-0 transition-transform duration-700"
+         >
+            <div className="absolute inset-0 bg-gradient-to-br from-white/40 to-white/5" />
+            <div className="absolute -top-20 -right-20 w-40 h-40 bg-white/40 rounded-full blur-2xl" />
+            
+            <div className="text-center relative z-10 px-12">
+               <div className="w-16 h-16 rounded-2xl bg-white/40 backdrop-blur-md flex items-center justify-center mx-auto mb-6 shadow-sm border border-white/50">
+                  <span className="font-heading text-2xl font-bold text-eclipse-900">Y<span className="text-nebula-500">✦</span></span>
+               </div>
+               <h2 className="text-3xl font-heading font-bold text-eclipse-900 leading-tight mb-4 tracking-tight">
+                 Ruang privat untuk kreasi publik Anda.
+               </h2>
+               <p className="text-eclipse-700 text-sm leading-relaxed">
+                 Transparansi penuh dalam proses kreatif. Pantau, berikan ulasan, dan setujui karya digital Anda sebelum diluncurkan ke seluruh dunia.
+               </p>
             </div>
-         </div>
-
-         {/* 3D Nebula Mockup Placeholder */}
-         <div className="absolute inset-0 flex items-center justify-center">
-            <div className="w-[500px] h-[500px] rounded-full border border-white/40 bg-white/10 backdrop-blur-3xl shadow-[0_0_100px_rgba(140,155,255,0.4)] animate-[spin_60s_linear_infinite]" />
-            <div className="absolute w-32 h-32 rounded-full bg-nebula-500 blur-2xl opacity-50" />
-         </div>
-
-         {/* Overlay Card */}
-         <div className="mt-auto relative z-20 w-full max-w-xl mx-auto bg-white/70 backdrop-blur-xl border border-white p-12 rounded-[2.5rem] shadow-[0_20px_60px_-15px_rgba(140,155,255,0.15)]">
-            <h2 className="text-4xl font-heading font-bold text-eclipse-900 leading-tight mb-6 tracking-tight">
-              Babak baru Anda,<br />selangkah lebih dekat.
-            </h2>
-            <p className="text-eclipse-700 text-sm leading-relaxed mb-8">
-              Ikuti perkembangan proyek Anda, bagikan pemikiran Anda, dan saksikan cerita Anda menjadi nyata. Senang Anda ada di sini.
-            </p>
-            <p className="text-nebula-500 text-xs font-medium uppercase tracking-widest">
-              Digital yang bermakna. Sentuhan yang personal.
-            </p>
-         </div>
+         </motion.div>
       </div>
     </main>
   );
