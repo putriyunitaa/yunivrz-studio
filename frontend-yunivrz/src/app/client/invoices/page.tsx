@@ -2,13 +2,52 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-
-const invoices = [
-  { id: "INV-0261", type: "Uang Muka", amount: "Rp 2.000.000", date: "28 Sep 2026", status: "Lunas" },
-  { id: "INV-0262", type: "Pelunasan", amount: "Rp 1.500.000", date: "TBA", status: "Belum Lunas" },
-];
+import { useState, useEffect } from "react";
 
 export default function ClientInvoices() {
+  const [invoices, setInvoices] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchInvoices = async () => {
+      try {
+        const token = localStorage.getItem("auth_token");
+        const response = await fetch("http://localhost:8080/api/invoices", {
+          headers: {
+            "Accept": "application/json",
+            "Authorization": `Bearer ${token}`
+          }
+        });
+        const data = await response.json();
+        setInvoices(data);
+      } catch (error) {
+        console.error("Failed to fetch invoices:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchInvoices();
+  }, []);
+
+  const formatRupiah = (amount: number) => {
+    return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(amount);
+  };
+
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case 'paid':
+        return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-[#10B981]/10 text-[#10B981]">Lunas</span>;
+      case 'unpaid':
+        return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-nebula-500/10 text-nebula-500">Belum Lunas</span>;
+      case 'overdue':
+        return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-red-500/10 text-red-500">Terlambat</span>;
+      case 'cancelled':
+        return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-gray-500/10 text-gray-500">Dibatalkan</span>;
+      default:
+        return null;
+    }
+  };
+
   return (
     <div className="max-w-4xl">
       <motion.div
@@ -33,36 +72,36 @@ export default function ClientInvoices() {
             <thead className="bg-eclipse-900/5 text-[10px] font-bold tracking-widest uppercase text-eclipse-700">
               <tr>
                 <th className="px-6 py-4">ID Tagihan</th>
+                <th className="px-6 py-4">Proyek</th>
                 <th className="px-6 py-4">Jenis Tagihan</th>
-                <th className="px-6 py-4">Tanggal</th>
+                <th className="px-6 py-4">Jatuh Tempo</th>
                 <th className="px-6 py-4">Jumlah</th>
                 <th className="px-6 py-4">Status</th>
-                <th className="px-6 py-4">Aksi</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-eclipse-900/5">
-              {invoices.map((inv) => (
-                <tr key={inv.id} className="hover:bg-space-50/50 transition-colors">
-                  <td className="px-6 py-4 font-medium text-eclipse-900">{inv.id}</td>
-                  <td className="px-6 py-4 text-eclipse-700">{inv.type}</td>
-                  <td className="px-6 py-4 text-eclipse-700">{inv.date}</td>
-                  <td className="px-6 py-4 font-medium text-eclipse-900">{inv.amount}</td>
-                  <td className="px-6 py-4">
-                    <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${
-                      inv.status === 'Lunas' 
-                        ? 'bg-[#10B981]/10 text-[#10B981]' 
-                        : 'bg-nebula-500/10 text-nebula-500'
-                    }`}>
-                      {inv.status}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4">
-                     <Link href="#" className="text-nebula-500 hover:text-eclipse-900 font-medium transition-colors">
-                        Lihat PDF
-                     </Link>
-                  </td>
+              {loading ? (
+                <tr>
+                  <td colSpan={6} className="px-6 py-8 text-center text-eclipse-700">Memuat tagihan...</td>
                 </tr>
-              ))}
+              ) : invoices.length === 0 ? (
+                <tr>
+                  <td colSpan={6} className="px-6 py-8 text-center text-eclipse-700">Belum ada tagihan.</td>
+                </tr>
+              ) : (
+                invoices.map((inv) => (
+                  <tr key={inv.id} className="hover:bg-space-50/50 transition-colors">
+                    <td className="px-6 py-4 font-medium text-eclipse-900">{inv.invoice_number}</td>
+                    <td className="px-6 py-4 text-eclipse-700 truncate max-w-[150px]">{inv.project?.title || '-'}</td>
+                    <td className="px-6 py-4 text-eclipse-700 capitalize">{inv.type.replace('_', ' ')}</td>
+                    <td className="px-6 py-4 text-eclipse-700">{new Date(inv.due_date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })}</td>
+                    <td className="px-6 py-4 font-medium text-eclipse-900">{formatRupiah(inv.amount)}</td>
+                    <td className="px-6 py-4">
+                      {getStatusBadge(inv.status)}
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>

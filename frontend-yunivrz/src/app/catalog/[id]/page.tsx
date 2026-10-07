@@ -3,9 +3,39 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { useParams } from "next/navigation";
+import { useState, useEffect } from "react";
 
 export default function CatalogDetailPage() {
   const { id } = useParams();
+  const [catalog, setCatalog] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchCatalog = async () => {
+      try {
+        const response = await fetch(`http://localhost:8080/api/catalogs/${id}`, {
+          headers: {
+            "Accept": "application/json",
+          }
+        });
+        const data = await response.json();
+        setCatalog(data);
+      } catch (error) {
+        console.error("Failed to fetch catalog:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    if (id) fetchCatalog();
+  }, [id]);
+
+  if (loading) {
+    return <div className="flex-1 w-full bg-space-50 pt-32 pb-32 text-center">Memuat detail katalog...</div>;
+  }
+
+  if (!catalog || catalog.message) {
+    return <div className="flex-1 w-full bg-space-50 pt-32 pb-32 text-center">Katalog tidak ditemukan.</div>;
+  }
 
   return (
     <main className="flex-1 w-full bg-space-50 pt-20 pb-32 relative overflow-hidden">
@@ -38,11 +68,17 @@ export default function CatalogDetailPage() {
                    </div>
                    {/* Inside Screen */}
                    <div className="pt-16 px-6 text-center h-full bg-[#EBE7DF] flex flex-col">
-                      <div className="text-sm font-heading font-bold text-eclipse-900 mb-1">Anindya</div>
+                      <div className="text-sm font-heading font-bold text-eclipse-900 mb-1">{catalog.title.split(' ')[0]}</div>
                       <div className="text-[10px] text-eclipse-700 italic mb-1">&</div>
-                      <div className="text-sm font-heading font-bold text-eclipse-900 mb-6">Rizky</div>
-                      <div className="flex-1 bg-[#DCE4FA] rounded-t-full mt-4 flex items-center justify-center">
-                         <span className="text-[10px] font-bold text-eclipse-900/30 uppercase tracking-widest">Image Placeholder</span>
+                      <div className="text-sm font-heading font-bold text-eclipse-900 mb-6">{catalog.title.split(' ')[1] || 'Project'}</div>
+                      <div className="flex-1 rounded-t-full mt-4 flex items-center justify-center overflow-hidden relative">
+                         {catalog.thumbnail ? (
+                           <img src={catalog.thumbnail} alt={catalog.title} className="w-full h-full object-cover absolute inset-0" />
+                         ) : (
+                           <div className="w-full h-full bg-[#DCE4FA] flex items-center justify-center absolute inset-0">
+                             <span className="text-[10px] font-bold text-eclipse-900/30 uppercase tracking-widest">Image Placeholder</span>
+                           </div>
+                         )}
                       </div>
                    </div>
                 </div>
@@ -57,34 +93,34 @@ export default function CatalogDetailPage() {
               transition={{ delay: 0.2 }}
             >
               <div className="text-xs font-bold tracking-widest uppercase text-nebula-500 mb-4 bg-nebula-500/10 inline-block px-3 py-1 rounded-full">
-                Undangan Digital
+                {catalog.category.replace('_', ' ')}
               </div>
               <h1 className="text-5xl font-heading font-bold text-eclipse-900 mb-6 tracking-tight leading-[1.1]">
-                Lumina
+                {catalog.title}
               </h1>
               <p className="text-lg text-eclipse-700 mb-10 leading-relaxed">
-                Desain undangan digital untuk pernikahan Anindya dan Rizky. Terinspirasi oleh konsep *intimate wedding* di ruang terbuka dengan palet warna krem dan biru pucat.
+                {catalog.description}
               </p>
 
               <div className="grid grid-cols-2 gap-8 border-y border-eclipse-900/10 py-8 mb-10">
                  <div>
                     <h4 className="text-[10px] font-bold tracking-widest uppercase text-eclipse-900/40 mb-2">KLIEN</h4>
-                    <p className="text-sm font-bold text-eclipse-900">Anindya & Rizky</p>
+                    <p className="text-sm font-bold text-eclipse-900">Custom Project</p>
                  </div>
                  <div>
                     <h4 className="text-[10px] font-bold tracking-widest uppercase text-eclipse-900/40 mb-2">TAHUN</h4>
-                    <p className="text-sm font-bold text-eclipse-900">2026</p>
+                    <p className="text-sm font-bold text-eclipse-900">{new Date(catalog.created_at).getFullYear()}</p>
                  </div>
                  <div>
                     <h4 className="text-[10px] font-bold tracking-widest uppercase text-eclipse-900/40 mb-2">LAYANAN</h4>
-                    <p className="text-sm font-bold text-eclipse-900">Micro-Moments</p>
+                    <p className="text-sm font-bold text-eclipse-900">{catalog.category.replace('_', ' ')}</p>
                  </div>
                  <div>
                     <h4 className="text-[10px] font-bold tracking-widest uppercase text-eclipse-900/40 mb-2">FITUR</h4>
                     <ul className="text-sm font-medium text-eclipse-900 space-y-1">
-                       <li>&middot; Custom UI/UX</li>
-                       <li>&middot; RSVP System</li>
-                       <li>&middot; Smooth Animations</li>
+                       {catalog.features && catalog.features.map((f: string, i: number) => (
+                         <li key={i}>&middot; {f}</li>
+                       ))}
                     </ul>
                  </div>
               </div>

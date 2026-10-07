@@ -1,8 +1,91 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
 
 export default function ClientRevisions() {
+  const [user, setUser] = useState<any>(null);
+  const [project, setProject] = useState<any>(null);
+  const [revisions, setRevisions] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [newMessage, setNewMessage] = useState("");
+
+  useEffect(() => {
+    // 1. Get User
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) setUser(JSON.parse(storedUser));
+
+    // 2. Fetch Projects and Revisions
+    const fetchData = async () => {
+      try {
+        const token = localStorage.getItem("auth_token");
+        const headers = {
+          "Accept": "application/json",
+          "Authorization": `Bearer ${token}`
+        };
+
+        const projRes = await fetch("http://localhost:8080/api/projects", { headers });
+        const projData = await projRes.json();
+        
+        let activeProject = null;
+        if (projData && projData.length > 0) {
+          activeProject = projData[0];
+          setProject(activeProject);
+        }
+
+        if (activeProject) {
+          const revRes = await fetch(`http://localhost:8080/api/project-revisions?project_id=${activeProject.id}`, { headers });
+          const revData = await revRes.json();
+          // Sort ascending for chat UI
+          if (Array.isArray(revData)) {
+            setRevisions(revData.sort((a: any, b: any) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime()));
+          }
+        }
+      } catch (error) {
+        console.error("Failed to fetch data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const handleSendMessage = async () => {
+    if (!newMessage.trim() || !project) return;
+    
+    try {
+      const token = localStorage.getItem("auth_token");
+      const response = await fetch("http://localhost:8080/api/project-revisions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          project_id: project.id,
+          content: newMessage
+        })
+      });
+
+      if (response.ok) {
+        const rev = await response.json();
+        setRevisions(prev => [...prev, rev]);
+        setNewMessage("");
+      }
+    } catch (error) {
+      console.error("Failed to send message:", error);
+    }
+  };
+
+  if (loading) {
+    return <div className="max-w-4xl pt-10">Memuat utas revisi...</div>;
+  }
+
+  if (!project) {
+    return <div className="max-w-4xl pt-10">Belum ada proyek aktif untuk direvisi.</div>;
+  }
+
   return (
     <div className="max-w-4xl h-[calc(100vh-160px)] flex flex-col">
       <motion.div
@@ -26,58 +109,38 @@ export default function ClientRevisions() {
 
          {/* Chat History */}
          <div className="flex-1 overflow-y-auto p-8 flex flex-col gap-8 relative z-10">
-            
-            {/* System Message */}
-            <div className="text-center">
-               <span className="text-[10px] font-bold tracking-widest uppercase text-eclipse-700/40 bg-space-50 px-3 py-1 rounded-full">Hari ini, 09:41 AM</span>
-            </div>
+            {revisions.length === 0 ? (
+               <div className="text-center text-eclipse-700">Belum ada riwayat percakapan.</div>
+            ) : (
+               revisions.map((rev) => {
+                  const isClient = rev.user?.role_id === 2; // Assuming 2 is client
+                  const isMe = rev.user_id === user?.id;
 
-            {/* Creator Message */}
-            <div className="flex gap-4 max-w-[80%]">
-               <div className="w-10 h-10 rounded-full bg-nebula-500 text-white flex items-center justify-center font-bold text-sm shrink-0 shadow-md">
-                  Y
-               </div>
-               <div>
-                  <div className="bg-space-50 border border-eclipse-900/5 rounded-2xl rounded-tl-sm p-4 text-sm text-eclipse-900 leading-relaxed shadow-sm">
-                     Halo Anindya! Draf eksplorasi visual pertama (Tahap 1) untuk Sagara Living sudah saya unggah. Saya sangat menekankan penggunaan *whitespace* untuk memberi kesan premium seperti yang kita diskusikan. Silakan dilihat dan beri masukan ya.
-                  </div>
-                  <div className="mt-2 flex gap-2">
-                     <div className="w-32 h-24 bg-[#EBE7DF] rounded-lg border border-eclipse-900/10 flex items-center justify-center cursor-pointer hover:border-nebula-500/50 transition-colors">
-                        <span className="text-[8px] font-bold uppercase text-eclipse-900/30">Draf_V1_A.pdf</span>
-                     </div>
-                     <div className="w-32 h-24 bg-[#F5F2EE] rounded-lg border border-eclipse-900/10 flex items-center justify-center cursor-pointer hover:border-nebula-500/50 transition-colors">
-                        <span className="text-[8px] font-bold uppercase text-eclipse-900/30">Draf_V1_B.pdf</span>
-                     </div>
-                  </div>
-               </div>
-            </div>
-
-            {/* Client Message (User) */}
-            <div className="flex gap-4 max-w-[80%] self-end flex-row-reverse">
-               <div className="w-10 h-10 rounded-full bg-eclipse-900 text-white flex items-center justify-center font-bold text-sm shrink-0 shadow-md">
-                  AP
-               </div>
-               <div>
-                  <div className="bg-nebula-500 text-white rounded-2xl rounded-tr-sm p-4 text-sm leading-relaxed shadow-md shadow-nebula-500/20">
-                     Wah, luar biasa! Saya sangat suka arah desain opsi A. Terasa sangat bersih dan mencerminkan esensi Sagara.
-                     <br/><br/>
-                     Satu revisi kecil: apakah kita bisa mencoba mengganti warna *button* utama menjadi warna hijau zaitun (*olive*) gelap dari pedoman merek kita?
-                  </div>
-               </div>
-            </div>
-
-            {/* Creator Message */}
-            <div className="flex gap-4 max-w-[80%]">
-               <div className="w-10 h-10 rounded-full bg-nebula-500 text-white flex items-center justify-center font-bold text-sm shrink-0 shadow-md">
-                  Y
-               </div>
-               <div>
-                  <div className="bg-space-50 border border-eclipse-900/5 rounded-2xl rounded-tl-sm p-4 text-sm text-eclipse-900 leading-relaxed shadow-sm">
-                     Tentu saja! Saya akan sesuaikan warna tombolnya dan memperbarui pratinjaunya besok pagi. Terima kasih atas umpan baliknya yang cepat!
-                  </div>
-               </div>
-            </div>
-
+                  return (
+                    <div key={rev.id} className={`flex gap-4 max-w-[80%] ${isMe ? 'self-end flex-row-reverse' : ''}`}>
+                       <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm shrink-0 shadow-md ${
+                          isMe ? 'bg-eclipse-900 text-white' : 'bg-nebula-500 text-white'
+                       }`}>
+                          {rev.user?.name ? rev.user.name.charAt(0).toUpperCase() : 'Y'}
+                       </div>
+                       <div>
+                          <div className={`rounded-2xl p-4 text-sm leading-relaxed shadow-sm ${
+                             isMe 
+                               ? 'bg-nebula-500 text-white rounded-tr-sm shadow-nebula-500/20' 
+                               : 'bg-space-50 border border-eclipse-900/5 text-eclipse-900 rounded-tl-sm'
+                          }`}>
+                             {rev.content}
+                          </div>
+                          {rev.preview_url && (
+                             <div className="mt-2 text-[10px] uppercase font-bold text-eclipse-700">
+                               <a href={rev.preview_url} target="_blank" rel="noopener noreferrer" className="text-nebula-500 underline hover:text-eclipse-900">Lihat Pratinjau</a>
+                             </div>
+                          )}
+                       </div>
+                    </div>
+                  );
+               })
+            )}
          </div>
 
          {/* Input Area */}
@@ -88,10 +151,16 @@ export default function ClientRevisions() {
                </button>
                <input 
                   type="text" 
+                  value={newMessage}
+                  onChange={(e) => setNewMessage(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
                   placeholder="Ketik balasan Anda di sini..." 
                   className="flex-1 bg-transparent text-sm focus:outline-none"
                />
-               <button className="px-6 py-2.5 bg-eclipse-900 text-white text-sm font-bold rounded-xl hover:bg-eclipse-800 transition-colors shadow-sm">
+               <button 
+                  onClick={handleSendMessage}
+                  className="px-6 py-2.5 bg-eclipse-900 text-white text-sm font-bold rounded-xl hover:bg-eclipse-800 transition-colors shadow-sm"
+               >
                   Kirim
                </button>
             </div>

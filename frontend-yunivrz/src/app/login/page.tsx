@@ -8,9 +8,45 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = (e: React.FormEvent) => {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    window.location.href = "/client/dashboard";
+    setLoading(true);
+    setError("");
+
+    try {
+      const response = await fetch("http://localhost:8080/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Login gagal. Silakan periksa kembali email dan kata sandi Anda.");
+      }
+
+      // Simpan token (bisa menggunakan cookie atau localStorage untuk demo saat ini)
+      localStorage.setItem("auth_token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
+
+      // Redirect ke dashboard admin atau klien
+      if (data.user?.role_id === 1) { // asumsikan 1 adalah admin
+        window.location.href = "/admin/dashboard";
+      } else {
+        window.location.href = "/client/dashboard";
+      }
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -44,6 +80,11 @@ export default function LoginPage() {
           </p>
 
           <form onSubmit={handleLogin} className="space-y-6">
+            {error && (
+              <div className="p-4 rounded-xl bg-red-50 text-red-600 text-sm font-medium border border-red-100">
+                {error}
+              </div>
+            )}
             <div>
               <label className="block text-xs font-bold uppercase tracking-widest text-eclipse-900/60 mb-2">Alamat Email</label>
               <input 
@@ -72,9 +113,15 @@ export default function LoginPage() {
 
             <button 
               type="submit"
-              className="w-full py-4 bg-eclipse-900 hover:bg-eclipse-800 text-white text-sm font-bold rounded-2xl transition-all shadow-[0_15px_30px_-10px_rgba(11,12,16,0.3)] hover:-translate-y-0.5"
+              disabled={loading}
+              className={`w-full py-4 text-white text-sm font-bold rounded-2xl transition-all shadow-[0_15px_30px_-10px_rgba(11,12,16,0.3)] hover:-translate-y-0.5 flex justify-center items-center ${loading ? 'bg-eclipse-700 cursor-not-allowed' : 'bg-eclipse-900 hover:bg-eclipse-800'}`}
             >
-              Masuk ke Dasbor
+              {loading ? (
+                <span className="flex items-center gap-2">
+                  <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                  Memproses...
+                </span>
+              ) : 'Masuk ke Dasbor'}
             </button>
             
             <button 

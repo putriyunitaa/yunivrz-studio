@@ -1,48 +1,73 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 
-// Fake data for Kanban layout
-const kanbanColumns = [
-  {
-    title: "Menunggu",
-    count: 3,
-    cards: [
-      { id: 1, title: "Ruang Collective", category: "Milestones", progress: 0, date: "20 Okt", clientInitials: "BS", designerInitials: "YS", completed: false },
-      { id: 2, title: "Aulia & Farhan", category: "Micro-Moments", progress: 0, date: "28 Okt", clientInitials: "AR", designerInitials: "YS", completed: false },
-      { id: 3, title: "Nusa portal member", category: "Custom Solutions", progress: 0, date: "18 Nov", clientInitials: "NC", designerInitials: "YS", completed: false },
-    ]
-  },
-  {
-    title: "Dalam Proses",
-    count: 6,
-    cards: [
-      { id: 4, title: "Sagara Living", category: "Milestones", progress: 48, date: "24 Okt", clientInitials: "DW", designerInitials: "YS", completed: false },
-      { id: 5, title: "Kopi Kala", category: "Milestones", progress: 72, date: "18 Okt", clientInitials: "IP", designerInitials: "YS", completed: false },
-      { id: 6, title: "Aksara Studio", category: "Milestones", progress: 35, date: "30 Okt", clientInitials: "BS", designerInitials: "YS", completed: false },
-    ]
-  },
-  {
-    title: "Revisi",
-    count: 3,
-    cards: [
-      { id: 7, title: "Anindya & Rizky", category: "Micro-Moments", progress: 65, date: "12 Okt", clientInitials: "AP", designerInitials: "YS", completed: false },
-      { id: 8, title: "Nusa storefront", category: "Custom Solutions", progress: 84, date: "16 Okt", clientInitials: "NC", designerInitials: "YS", completed: false },
-      { id: 9, title: "Dewi & Bagas", category: "Micro-Moments", progress: 80, date: "14 Okt", clientInitials: "DL", designerInitials: "YS", completed: false },
-    ]
-  },
-  {
-    title: "Selesai",
-    count: 3,
-    cards: [
-      { id: 10, title: "Slow Sunday", category: "Micro-Moments", progress: 100, date: "03 Okt", clientInitials: "IP", designerInitials: "YS", completed: true },
-      { id: 11, title: "Jurnal Kala", category: "Milestones", progress: 100, date: "01 Okt", clientInitials: "IP", designerInitials: "YS", completed: true },
-      { id: 12, title: "Laras & Aditya", category: "Micro-Moments", progress: 100, date: "29 Sep", clientInitials: "LA", designerInitials: "YS", completed: true },
-    ]
-  },
-];
-
 export default function AdminProjects() {
+  const [kanbanColumns, setKanbanColumns] = useState([
+    { id: 'pending', title: "Menunggu", count: 0, cards: [] as any[] },
+    { id: 'in_progress', title: "Dalam Proses", count: 0, cards: [] as any[] },
+    { id: 'revision', title: "Revisi", count: 0, cards: [] as any[] },
+    { id: 'completed', title: "Selesai", count: 0, cards: [] as any[] },
+  ]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const token = localStorage.getItem("auth_token");
+        const response = await fetch("http://localhost:8080/api/projects", {
+          headers: {
+            "Accept": "application/json",
+            "Authorization": `Bearer ${token}`
+          }
+        });
+        const data = await response.json();
+        
+        const grouped = {
+          pending: [] as any[],
+          in_progress: [] as any[],
+          revision: [] as any[],
+          completed: [] as any[]
+        };
+
+        data.forEach((p: any) => {
+          const card = {
+            id: p.id,
+            title: p.title,
+            category: p.catalog?.name || 'Custom Solutions',
+            progress: p.progress_percent,
+            date: new Date(p.deadline || p.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' }),
+            clientInitials: p.client?.name ? p.client.name.substring(0, 2).toUpperCase() : 'CL',
+            designerInitials: "YS",
+            completed: p.status === 'completed'
+          };
+          
+          if (p.status === 'review') {
+              grouped['revision'].push(card);
+          } else if (grouped[p.status as keyof typeof grouped]) {
+              grouped[p.status as keyof typeof grouped].push(card);
+          } else {
+              grouped['pending'].push(card);
+          }
+        });
+
+        setKanbanColumns([
+          { id: 'pending', title: "Menunggu", count: grouped.pending.length, cards: grouped.pending },
+          { id: 'in_progress', title: "Dalam Proses", count: grouped.in_progress.length, cards: grouped.in_progress },
+          { id: 'revision', title: "Revisi/Review", count: grouped.revision.length, cards: grouped.revision },
+          { id: 'completed', title: "Selesai", count: grouped.completed.length, cards: grouped.completed },
+        ]);
+
+      } catch (error) {
+        console.error("Failed to fetch projects:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProjects();
+  }, []);
   return (
     <div className="h-full flex flex-col max-w-[1400px]">
       

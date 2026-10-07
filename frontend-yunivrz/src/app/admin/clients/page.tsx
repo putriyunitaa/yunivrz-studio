@@ -3,14 +3,33 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 
-const clients = [
-  { id: "CL-01", name: "Anindya Putri", company: "Sagara Living", email: "anindya@sagara.com", projects: 2, status: "Aktif", lastActive: "Hari ini" },
-  { id: "CL-02", name: "Rizky & Dewi", company: "Lumina Wedding", email: "hello@rizkydewi.id", projects: 1, status: "Selesai", lastActive: "Minggu lalu" },
-  { id: "CL-03", name: "Bagas Setiawan", company: "Ruang Collective", email: "bagas@ruang.co", projects: 3, status: "Aktif", lastActive: "Kemarin" },
-  { id: "CL-04", name: "Nusa Storefront", company: "Nusa Corp", email: "admin@nusa.com", projects: 1, status: "Menunggu", lastActive: "2 Hari lalu" },
-];
+import { useState, useEffect } from "react";
 
 export default function AdminClients() {
+  const [clients, setClients] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchClients = async () => {
+      try {
+        const token = localStorage.getItem("auth_token");
+        const response = await fetch("http://localhost:8080/api/clients", {
+          headers: {
+            "Accept": "application/json",
+            "Authorization": `Bearer ${token}`
+          }
+        });
+        const data = await response.json();
+        setClients(data);
+      } catch (error) {
+        console.error("Failed to fetch clients:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchClients();
+  }, []);
   return (
     <div className="max-w-6xl">
       
@@ -70,7 +89,19 @@ export default function AdminClients() {
                   </tr>
                </thead>
                <tbody className="divide-y divide-eclipse-900/5">
-                  {clients.map((client) => (
+                  {loading ? (
+                    <tr>
+                      <td colSpan={5} className="px-6 py-12 text-center text-eclipse-700">
+                        Memuat data klien...
+                      </td>
+                    </tr>
+                  ) : clients.length === 0 ? (
+                    <tr>
+                      <td colSpan={5} className="px-6 py-12 text-center text-eclipse-700">
+                        Belum ada klien terdaftar.
+                      </td>
+                    </tr>
+                  ) : clients.map((client) => (
                      <tr key={client.id} className="hover:bg-space-50/30 transition-colors group">
                         <td className="px-6 py-4">
                            <div className="flex items-center gap-3">
@@ -83,19 +114,17 @@ export default function AdminClients() {
                               </div>
                            </div>
                         </td>
-                        <td className="px-6 py-4 text-eclipse-700">{client.company}</td>
+                        <td className="px-6 py-4 text-eclipse-700">{client.company || '-'}</td>
                         <td className="px-6 py-4">
                            <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold ${
-                              client.status === 'Aktif' ? 'bg-[#10B981]/10 text-[#10B981]' :
-                              client.status === 'Selesai' ? 'bg-eclipse-900/5 text-eclipse-700' :
-                              'bg-[#F59E0B]/10 text-[#F59E0B]'
+                              client.is_active ? 'bg-[#10B981]/10 text-[#10B981]' : 'bg-eclipse-900/5 text-eclipse-700'
                            }`}>
-                              {client.status}
+                              {client.is_active ? 'Aktif' : 'Nonaktif'}
                            </span>
-                           <div className="text-[10px] text-eclipse-700/50 mt-1 ml-1">Terakhir login: {client.lastActive}</div>
+                           <div className="text-[10px] text-eclipse-700/50 mt-1 ml-1">ID: {client.id}</div>
                         </td>
                         <td className="px-6 py-4">
-                           <div className="font-medium text-eclipse-900">{client.projects}</div>
+                           <div className="font-medium text-eclipse-900">{client.projects_count || 0}</div>
                         </td>
                         <td className="px-6 py-4 text-right">
                            <button className="text-nebula-500 font-bold hover:text-eclipse-900 transition-colors px-3 py-1.5 rounded-lg hover:bg-space-50 opacity-0 group-hover:opacity-100">
