@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ClientController;
+use App\Http\Controllers\Api\UserController;
 
 use App\Http\Controllers\Api\ProjectController;
 use App\Http\Controllers\Api\CatalogController;
@@ -11,8 +12,14 @@ use App\Http\Controllers\Api\PackageController;
 use App\Http\Controllers\Api\InvoiceController;
 use App\Http\Controllers\Api\ProjectLogController;
 use App\Http\Controllers\Api\ProjectRevisionController;
+use App\Http\Controllers\Api\SettingController;
 
+Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+
+// Studio Settings & Social Links
+Route::get('/settings', [SettingController::class, 'index']);
+Route::post('/settings', [SettingController::class, 'update']);
 
 // Public catalog access
 Route::get('/catalogs', [CatalogController::class, 'index']);
@@ -26,8 +33,12 @@ Route::middleware('auth:sanctum')->group(function () {
         return $request->user()->load('role');
     });
 
-    // CRM Routes
+    // CRM & Users Routes
     Route::apiResource('clients', ClientController::class);
+    Route::apiResource('users', UserController::class);
+    Route::get('/roles', function() {
+        return response()->json(\App\Models\Role::all());
+    });
     
     // Project Routes
     Route::apiResource('projects', ProjectController::class);

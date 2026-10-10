@@ -3,6 +3,7 @@ import { Inter, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import { SettingsProvider } from "@/context/SettingsContext";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], variable: "--font-heading" });
@@ -20,11 +21,13 @@ export default function RootLayout({
   return (
     <html lang="id" className={`${inter.variable} ${spaceGrotesk.variable}`}>
       <body className="antialiased flex flex-col min-h-screen">
-        <Navbar />
-        <main className="flex-1">
-          {children}
-        </main>
-        <Footer />
+        <SettingsProvider>
+          <Navbar />
+          <main className="flex-1">
+            {children}
+          </main>
+          <Footer />
+        </SettingsProvider>
       </body>
     </html>
   );

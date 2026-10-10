@@ -2,8 +2,10 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { useSettings } from "@/context/SettingsContext";
 
 export default function AboutPage() {
+  const { settings } = useSettings();
   return (
     <main className="flex-1 w-full bg-space-50 pt-24 relative overflow-hidden">
       
@@ -20,7 +22,7 @@ export default function AboutPage() {
               animate={{ opacity: 1, y: 0 }}
               className="text-xs font-bold tracking-widest uppercase text-nebula-500 mb-4 bg-nebula-500/10 inline-block px-4 py-1.5 rounded-full"
             >
-              Tentang Studio
+              ABOUT STUDIO
             </motion.div>
             <motion.h1 
               initial={{ opacity: 0, y: 20 }}
@@ -63,7 +65,7 @@ export default function AboutPage() {
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#B2BFFF]/5 to-transparent blur-2xl" />
         <div className="container mx-auto px-6 max-w-7xl relative z-10">
           <div className="text-xs font-bold tracking-widest uppercase text-nebula-500 mb-8 bg-white/50 px-3 py-1 rounded-full inline-block backdrop-blur-sm">
-            Manifesto Kami
+            OUR MANIFESTO
           </div>
           <h2 className="text-4xl md:text-5xl lg:text-[4rem] font-heading font-medium text-eclipse-900 leading-[1.1] max-w-5xl mb-20 tracking-tight">
             Kami percaya pengalaman digital terbaik tidak mengemis perhatian. Mereka membangun koneksi personal yang mendalam.
@@ -86,73 +88,74 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Timeline Section (Added based on UI Prompt) */}
+      {/* About the Developer Section */}
       <section className="py-32 px-6">
-        <div className="container mx-auto max-w-4xl">
-          <h2 className="text-3xl font-heading font-bold text-eclipse-900 text-center mb-16 tracking-tight">Perjalanan Studio</h2>
-          
-          <div className="space-y-12 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-eclipse-900/10 before:to-transparent">
-             {[
-               { year: "2021", title: "Langkah Pertama", desc: "Dimulai dari sebuah hasrat untuk merancang identitas visual yang lebih bermakna untuk kreator lokal." },
-               { year: "2023", title: "Evolusi Digital", desc: "Memperluas layanan ke arah undangan digital mewah dan pengalaman web yang interaktif (WebGL & React)." },
-               { year: "2025", title: "Studio Independen", desc: "Mendirikan Yunivrz Studio sebagai praktik independen dengan pendekatan premium dan 1-on-1 bersama klien." },
-               { year: "2026", title: "Era Headless", desc: "Meluncurkan portal kolaborasi eksklusif untuk memberikan pengalaman klien yang transparan dan tanpa gesekan." }
-             ].map((item, idx) => (
-               <div key={idx} className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
-                  <div className="flex items-center justify-center w-10 h-10 rounded-full border-4 border-white bg-nebula-500 text-white shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 shadow-md relative z-10">
-                     <div className="w-2 h-2 bg-white rounded-full"></div>
+        <div className="container mx-auto max-w-5xl">
+          <div className="flex flex-col md:flex-row gap-12 md:gap-16 items-center">
+            
+            {/* Avatar Side */}
+            <div className="w-full md:w-2/5 relative">
+               <div className="aspect-[4/5] rounded-[2.5rem] overflow-hidden bg-gradient-to-br from-eclipse-900/5 to-purple-500/10 relative shadow-xl border border-white flex flex-col items-center justify-center p-8 text-center group">
+                  <div className="absolute inset-0 bg-white/40 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10 flex items-center justify-center">
+                    <span className="text-sm font-bold text-eclipse-900 bg-white px-4 py-2 rounded-full shadow-lg">Let's connect! ✨</span>
                   </div>
-                  <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-white/60 backdrop-blur-md p-6 rounded-2xl border border-white shadow-sm hover:shadow-md transition-all">
-                     <div className="text-nebula-500 font-bold text-sm mb-1">{item.year}</div>
-                     <h3 className="font-bold text-eclipse-900 mb-2">{item.title}</h3>
-                     <p className="text-eclipse-700 text-sm leading-relaxed">{item.desc}</p>
+                  
+                  <div className="w-32 h-32 rounded-full bg-white flex items-center justify-center shadow-lg border-4 border-white/50 mb-6 relative z-0">
+                    <span className="text-4xl">👨‍💻</span>
+                  </div>
+                  <h3 className="font-heading font-bold text-2xl text-eclipse-900 mb-1">Your Developer</h3>
+                  <p className="text-eclipse-700 text-sm mb-8">Founder, Yunivrz Studio</p>
+
+                  <div className="flex items-center gap-4 relative z-20">
+                     <a href={settings.github_url || "https://github.com/putriyunitaa"} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-gray-400 hover:text-gray-900 shadow-sm hover:shadow hover:-translate-y-1 transition-all" aria-label="GitHub">
+                       <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" /></svg>
+                     </a>
+                     <a href={settings.linkedin_url || "https://www.linkedin.com/in/ptryntt"} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-gray-400 hover:text-blue-600 shadow-sm hover:shadow hover:-translate-y-1 transition-all" aria-label="LinkedIn">
+                       <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" /></svg>
+                     </a>
+                     <a href={settings.instagram_developer || "https://www.instagram.com/ptryntaa_/"} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-gray-400 hover:text-pink-600 shadow-sm hover:shadow hover:-translate-y-1 transition-all" aria-label="Instagram Developer">
+                       <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" /></svg>
+                     </a>
                   </div>
                </div>
-             ))}
+               
+               {/* Decorative elements */}
+               <div className="absolute -bottom-8 -left-8 w-40 h-40 bg-purple-400/20 blur-3xl rounded-full -z-10" />
+            </div>
+
+            {/* Text Side */}
+            <div className="w-full md:w-3/5">
+              <div className="text-[10px] font-bold tracking-widest uppercase text-nebula-500 mb-6 inline-block bg-nebula-500/10 px-4 py-1.5 rounded-full">
+                ABOUT THE DEVELOPER
+              </div>
+              <h2 className="text-3xl md:text-4xl font-heading font-bold text-eclipse-900 mb-6 tracking-tight leading-tight">
+                Halo, saya pembuat di balik <br/>Yunivrz Studio.
+              </h2>
+              
+              <div className="space-y-6 text-eclipse-700 leading-relaxed text-[15px]">
+                <p>
+                  Sebagai seorang mahasiswa dan <span className="font-semibold italic">developer</span>, saya menyadari satu hal: banyak bisnis kecil, UMKM, dan kreator lokal yang berjuang membangun identitas digital karena terkendala biaya agensi yang fantastis.
+                </p>
+                <p>
+                  Dari situlah <strong>Yunivrz Studio</strong> lahir. Sebuah komitmen untuk menghadirkan kualitas website premium—mulai dari undangan pernikahan interaktif hingga aplikasi web khusus—dengan harga yang sangat realistis untuk kantong kita.
+                </p>
+                <p>
+                  Berbeda dengan agensi besar, di sini Anda berkolaborasi langsung dengan saya. Mulai dari coretan konsep di kertas, hingga penulisan baris kode terakhir. Pendekatan 1-on-1 ini memastikan setiap detail sesuai dengan visi Anda, dikerjakan dengan penuh dedikasi (dan beberapa cangkir kopi). ☕
+                </p>
+              </div>
+
+              <div className="mt-10 flex flex-wrap gap-3">
+                <span className="bg-white border border-gray-200 px-4 py-2 rounded-full text-xs font-bold text-eclipse-900">Web Developer</span>
+                <span className="bg-white border border-gray-200 px-4 py-2 rounded-full text-xs font-bold text-eclipse-900">UI/UX Enthusiast</span>
+                <span className="bg-white border border-gray-200 px-4 py-2 rounded-full text-xs font-bold text-eclipse-900">Mahasiswa</span>
+              </div>
+            </div>
+            
           </div>
         </div>
       </section>
 
-      {/* The Creator Section */}
-      <section className="py-32 bg-eclipse-900 text-white rounded-t-[3rem] relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-gradient-to-br from-[#B2BFFF]/10 to-[#6B7BFF]/10 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/3 pointer-events-none" />
-        
-        <div className="container mx-auto px-6 max-w-7xl relative z-10">
-          <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
-            <h2 className="text-4xl md:text-5xl font-heading font-bold text-white tracking-tight">
-              Kreator di balik layar.
-            </h2>
-            <p className="text-white/60 max-w-xs text-sm">
-              Satu visi yang sama tentang menyempurnakan setiap detail kecil dalam proyek digital.
-            </p>
-          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-            <div className="aspect-square md:aspect-[4/5] rounded-[2rem] bg-white/5 border border-white/10 relative overflow-hidden backdrop-blur-sm group">
-               {/* Profile Image Placeholder with Glassmorphism */}
-               <div className="absolute inset-0 bg-gradient-to-t from-eclipse-900/80 via-transparent to-transparent z-10" />
-               <div className="absolute inset-0 flex items-center justify-center opacity-20 group-hover:opacity-30 transition-opacity">
-                 <svg className="w-24 h-24" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
-               </div>
-               <div className="absolute bottom-8 left-8 z-20 bg-white/10 backdrop-blur-md p-4 rounded-xl border border-white/10">
-                  <h3 className="text-2xl font-bold text-white mb-1">Yunita Putri</h3>
-                  <p className="text-white/60 text-sm">Independent Designer & Developer</p>
-               </div>
-            </div>
-            <div className="max-w-md">
-               <p className="text-lg text-white/80 leading-relaxed mb-8">
-                 Halo, saya adalah kreator dari Yunivrz Studio. Saya membangun studio independen ini untuk menjembatani jarak antara cerita personal yang intim dengan eksekusi digital yang premium dan canggih.
-               </p>
-               <p className="text-lg text-white/80 leading-relaxed mb-8">
-                 Ketika Anda bekerja bersama Yunivrz, Anda tidak sedang dilempar-lempar antara desainer junior atau manajer akun. Anda sedang berkolaborasi langsung secara transparan dengan tenaga ahli yang berdedikasi tinggi.
-               </p>
-               <Link href="/catalog" className="inline-flex items-center gap-2 px-6 py-3 bg-white text-eclipse-900 text-sm font-bold rounded-full hover:bg-space-100 transition-all">
-                 Lihat karya saya &rarr;
-               </Link>
-            </div>
-          </div>
-        </div>
-      </section>
 
     </main>
   );

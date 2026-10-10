@@ -6,6 +6,49 @@ import { useState, useEffect } from "react";
 
 const categories = ["Semua", "micro_moments", "milestones", "custom_solutions"];
 
+const DUMMY_CATALOGS = [
+  {
+    id: 1,
+    slug: 'sagara-living',
+    title: 'Sagara Living',
+    category: 'custom_solutions',
+    description: 'A quieter kind of extraordinary. E-commerce website for a premium furniture brand.',
+    thumbnail: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=800&q=80',
+  },
+  {
+    id: 2,
+    slug: 'lumina-wedding',
+    title: 'Lumina Wedding',
+    category: 'micro_moments',
+    description: 'Digital wedding invitation with interactive timeline and RSVP.',
+    thumbnail: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=800&q=80',
+  },
+  {
+    id: 3,
+    slug: 'aksara-studio',
+    title: 'Aksara Creative',
+    category: 'milestones',
+    description: 'Portfolio website for an independent creative agency.',
+    thumbnail: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=80',
+  },
+  {
+    id: 4,
+    slug: 'kopi-kala',
+    title: 'Kopi Kala',
+    category: 'milestones',
+    description: 'Local coffee shop landing page and menu catalog.',
+    thumbnail: 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=800&q=80',
+  },
+  {
+    id: 5,
+    slug: 'birthday-gift',
+    title: 'Interactive Birthday',
+    category: 'micro_moments',
+    description: 'A personalized interactive web experience for a special moment.',
+    thumbnail: '/images/catalogs/bday.jpg',
+  }
+];
+
 export default function CatalogPage() {
   const [activeCategory, setActiveCategory] = useState("Semua");
   const [catalogs, setCatalogs] = useState<any[]>([]);
@@ -14,15 +57,17 @@ export default function CatalogPage() {
   useEffect(() => {
     const fetchCatalogs = async () => {
       try {
-        const response = await fetch("http://localhost:8080/api/catalogs", {
+        const response = await fetch("http://localhost:8000/api/catalogs", {
           headers: {
             "Accept": "application/json",
           }
         });
         const data = await response.json();
-        setCatalogs(data);
+        // If data is empty array, use dummy data so page doesn't look broken
+        setCatalogs(data && data.length > 0 ? data : DUMMY_CATALOGS);
       } catch (error) {
         console.error("Failed to fetch catalogs:", error);
+        setCatalogs(DUMMY_CATALOGS); // Fallback if backend is down
       } finally {
         setLoading(false);
       }
@@ -47,7 +92,7 @@ export default function CatalogPage() {
           <motion.h1 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-5xl md:text-7xl font-heading font-bold text-eclipse-900 mb-8 tracking-tight leading-[1.1] max-w-4xl"
+            className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold text-eclipse-900 mb-8 tracking-tight leading-[1.1] max-w-4xl"
           >
             Arsip karya yang merayakan esensi *brand* Anda.
           </motion.h1>
@@ -95,7 +140,7 @@ export default function CatalogPage() {
                   style === 'portrait' ? 'row-span-2' : ''
                 }`}
               >
-                <Link href={`/catalog/${project.slug || project.id}`} className="block h-full">
+                <Link href={`/work/${project.slug || project.id}`} className="block h-full">
                   <div className={`w-full bg-white/60 backdrop-blur-xl border border-white/60 rounded-[2rem] shadow-sm hover:shadow-[0_20px_40px_-10px_rgba(140,155,255,0.15)] transition-all duration-500 overflow-hidden flex flex-col p-6 relative ${
                     style === 'portrait' ? 'min-h-[500px]' : 'min-h-[300px]'
                   }`}>
@@ -104,7 +149,14 @@ export default function CatalogPage() {
                      {/* Abstract Placeholder Visual / Thumbnail */}
                      <div className="flex-1 bg-gradient-to-br from-[#F4F5F9] to-[#EAEAF3] rounded-[1.5rem] mb-6 flex items-center justify-center overflow-hidden relative">
                         {project.thumbnail ? (
-                          <img src={project.thumbnail} alt={project.title} className="w-full h-full object-cover" />
+                          <img
+                            src={project.thumbnail}
+                            alt={project.title}
+                            className="w-full h-full object-cover"
+                            onError={(e) => {
+                              (e.target as any).src = "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=800&q=80";
+                            }}
+                          />
                         ) : (
                           <>
                             <div className="w-full h-full absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4IiBoZWlnaHQ9IjgiPgo8cmVjdCB3aWR0aD0iOCIgaGVpZ2h0PSI4IiBmaWxsPSIjZmZmIj48L3JlY3Q+CjxjaXJjbGUgY3g9IjMiIGN5PSIzIiByPSIxIiBmaWxsPSJyZ2JhKDIwMCwyMDAsMjAwLDAuMikiPjwvY2lyY2xlPgo8L3N2Zz4=')] opacity-50 mix-blend-multiply" />

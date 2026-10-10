@@ -4,15 +4,15 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 
 const articles = [
-  { id: 1, title: "Merancang keaslian di dunia yang bising", tag: "Design Journal", date: "12 Okt 2026", height: "h-80" },
+  { id: 1, title: "Merancang keaslian di dunia yang bising", tag: "Design Insights", date: "12 Okt 2026", height: "h-80" },
   { id: 2, title: "Website pernikahan adalah kesan pertama Anda", tag: "Digital Identity", date: "05 Okt 2026", height: "h-64" },
   { id: 3, title: "Ruang digital personal kembali hadir", tag: "Web Culture", date: "28 Sep 2026", height: "h-96" },
-  { id: 4, title: "Mengapa desain minimalis bukan berarti membosankan", tag: "Design Journal", date: "15 Sep 2026", height: "h-64" },
+  { id: 4, title: "Mengapa desain minimalis bukan berarti membosankan", tag: "Design Insights", date: "15 Sep 2026", height: "h-64" },
   { id: 5, title: "Pentingnya sistem RSVP transparan untuk acara intim", tag: "Tech Insights", date: "02 Sep 2026", height: "h-80" },
   { id: 6, title: "Berpisah dengan template, menyapa custom web", tag: "Digital Identity", date: "18 Ags 2026", height: "h-72" },
 ];
 
-export default function BlogPage() {
+export default function InsightsPage() {
   return (
     <main className="flex-1 w-full bg-space-50 pt-32 pb-32 relative min-h-screen">
       
@@ -29,7 +29,7 @@ export default function BlogPage() {
               Perspektif baru.
             </h1>
             <p className="text-lg text-eclipse-700 leading-relaxed">
-              Jurnal dan pemikiran mendalam seputar eksplorasi desain, pengembangan web premium, dan budaya digital.
+              Insights dan pemikiran mendalam seputar eksplorasi desain, pengembangan web premium, dan budaya digital.
             </p>
           </motion.div>
           
@@ -49,7 +49,7 @@ export default function BlogPage() {
 
         {/* Categories */}
         <div className="flex flex-wrap gap-2 mb-16">
-          {["Semua", "Design Journal", "Digital Identity", "Web Culture", "Tech Insights"].map((tag, i) => (
+          {["Semua", "Design Insights", "Digital Identity", "Web Culture", "Tech Insights"].map((tag, i) => (
              <button key={i} className={`px-4 py-2 rounded-full text-xs font-bold tracking-widest uppercase transition-all ${
                i === 0 
                  ? "bg-eclipse-900 text-white" 

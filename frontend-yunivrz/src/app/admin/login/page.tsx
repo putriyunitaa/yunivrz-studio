@@ -39,9 +39,9 @@ export default function LoginPage() {
       localStorage.setItem("user", JSON.stringify(data.user));
 
       if (data.user?.role_id === 1) { 
-        throw new Error("Akun Administrator terdeteksi. Silakan masuk melalui /admin/login.");
+        window.location.href = "/admin/dashboard";
       } else {
-        window.location.href = "/client/dashboard";
+        throw new Error("Akses ditolak. Akun ini tidak memiliki akses administrator.");
       }
     } catch (err: any) {
       setError(err.message);
@@ -74,25 +74,22 @@ export default function LoginPage() {
         {/* Content */}
         <div className="flex-1 flex flex-col max-w-[420px] w-full mx-auto justify-center">
           
-          <div className="text-[11px] font-bold tracking-wider uppercase text-purple-600 mb-6 bg-purple-50 inline-flex px-3 py-1.5 rounded-full w-fit">
-            YOUR CLIENT SPACE
+          <div className="text-[11px] font-bold tracking-wider uppercase text-nebula-500 mb-6 bg-nebula-500/10 inline-flex px-3 py-1.5 rounded-full w-fit">
+            WORKSPACE ADMIN
           </div>
           
           <h1 className="text-[40px] leading-tight font-heading font-bold text-[#111111] mb-3 tracking-tight">
-            Good to have you<br />back.
+            Administrator<br />Login.
           </h1>
           <p className="text-gray-500 text-[15px] mb-8">
-            Your ideas, updates and next steps. All in one place.
+            Manage projects, clients, and your studio's portfolio.
           </p>
 
-          {/* Tabs */}
+          {/* Removed Tabs for Admin */}
           <div className="flex p-1 bg-gray-50 rounded-xl mb-8 border border-gray-100">
-            <div className="w-1/2 text-center py-2.5 bg-white text-sm font-medium text-gray-900 rounded-lg shadow-[0_2px_8px_rgba(0,0,0,0.04)] cursor-default">
-              Log In
+            <div className="w-full text-center py-2.5 bg-white text-sm font-medium text-gray-900 rounded-lg shadow-[0_2px_8px_rgba(0,0,0,0.04)] cursor-default">
+              Admin Authentication
             </div>
-            <Link href="/register" className="w-1/2 text-center py-2.5 text-sm font-medium text-gray-500 hover:text-gray-700 transition-colors rounded-lg">
-              Sign Up
-            </Link>
           </div>
 
           <form onSubmit={handleLogin} className="space-y-5">

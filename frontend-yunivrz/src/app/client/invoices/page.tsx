@@ -1,8 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
-import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function ClientInvoices() {
   const [invoices, setInvoices] = useState<any[]>([]);
@@ -11,17 +9,20 @@ export default function ClientInvoices() {
   useEffect(() => {
     const fetchInvoices = async () => {
       try {
-        const token = localStorage.getItem("auth_token");
-        const response = await fetch("http://localhost:8080/api/invoices", {
+        const token = localStorage.getItem('token');
+        if (!token) return;
+
+        const response = await fetch('http://localhost:8000/api/invoices', {
           headers: {
-            "Accept": "application/json",
-            "Authorization": `Bearer ${token}`
+            'Authorization': `Bearer ${token}`,
+            'Accept': 'application/json'
           }
         });
+        
         const data = await response.json();
         setInvoices(data);
       } catch (error) {
-        console.error("Failed to fetch invoices:", error);
+        console.error('Error fetching invoices:', error);
       } finally {
         setLoading(false);
       }
@@ -29,96 +30,186 @@ export default function ClientInvoices() {
     fetchInvoices();
   }, []);
 
-  const formatRupiah = (amount: number) => {
-    return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(amount);
+  if (loading) {
+    return (
+      <div className="space-y-4 animate-pulse">
+        <div className="h-10 w-48 bg-gray-200 rounded"></div>
+        <div className="h-64 bg-gray-200 rounded-3xl"></div>
+      </div>
+    );
+  }
+
+  const formatIDR = (amount: number) => {
+    return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(amount);
   };
 
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case 'paid':
-        return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-[#10B981]/10 text-[#10B981]">Lunas</span>;
-      case 'unpaid':
-        return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-nebula-500/10 text-nebula-500">Belum Lunas</span>;
-      case 'overdue':
-        return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-red-500/10 text-red-500">Terlambat</span>;
-      case 'cancelled':
-        return <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-gray-500/10 text-gray-500">Dibatalkan</span>;
-      default:
-        return null;
-    }
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
   };
+
+  // Mock calculations based on invoices array
+  const outstandingBalance = invoices.filter(i => i.status !== 'paid').reduce((sum, inv) => sum + Number(inv.amount), 0);
+  const paidToDate = invoices.filter(i => i.status === 'paid').reduce((sum, inv) => sum + Number(inv.amount), 0);
+  const projectTotal = outstandingBalance + paidToDate;
+  const nextDue = invoices.filter(i => i.status !== 'paid').sort((a,b) => new Date(a.due_date).getTime() - new Date(b.due_date).getTime())[0];
 
   return (
-    <div className="max-w-4xl">
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="mb-12 flex items-end justify-between"
-      >
-        <div>
-           <h1 className="text-3xl font-heading font-bold text-eclipse-900 mb-3 tracking-tight">
-             Tagihan & Pembayaran
+    <div className="space-y-12 animate-in fade-in duration-700 max-w-5xl">
+      
+      {/* Header */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+         <div>
+           <h1 className="text-4xl font-heading font-medium text-gray-900 tracking-tight mb-2">
+             Everything, accounted for.
            </h1>
-           <p className="text-eclipse-700 text-sm leading-relaxed max-w-xl">
-             Tinjau riwayat pembayaran Anda dan selesaikan tagihan yang masih tertunda. 
-             Catatan: Sistem hanya mencatat status manual. Pembayaran tidak dilakukan secara otomatis.
+           <p className="text-gray-500 text-[15px]">
+             Your invoices and payments for Lumière · Anindya & Rizky.
            </p>
-        </div>
-      </motion.div>
-
-      <div className="bg-white rounded-3xl border border-eclipse-900/10 shadow-sm overflow-hidden mb-12">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm">
-            <thead className="bg-eclipse-900/5 text-[10px] font-bold tracking-widest uppercase text-eclipse-700">
-              <tr>
-                <th className="px-6 py-4">ID Tagihan</th>
-                <th className="px-6 py-4">Proyek</th>
-                <th className="px-6 py-4">Jenis Tagihan</th>
-                <th className="px-6 py-4">Jatuh Tempo</th>
-                <th className="px-6 py-4">Jumlah</th>
-                <th className="px-6 py-4">Status</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-eclipse-900/5">
-              {loading ? (
-                <tr>
-                  <td colSpan={6} className="px-6 py-8 text-center text-eclipse-700">Memuat tagihan...</td>
-                </tr>
-              ) : invoices.length === 0 ? (
-                <tr>
-                  <td colSpan={6} className="px-6 py-8 text-center text-eclipse-700">Belum ada tagihan.</td>
-                </tr>
-              ) : (
-                invoices.map((inv) => (
-                  <tr key={inv.id} className="hover:bg-space-50/50 transition-colors">
-                    <td className="px-6 py-4 font-medium text-eclipse-900">{inv.invoice_number}</td>
-                    <td className="px-6 py-4 text-eclipse-700 truncate max-w-[150px]">{inv.project?.title || '-'}</td>
-                    <td className="px-6 py-4 text-eclipse-700 capitalize">{inv.type.replace('_', ' ')}</td>
-                    <td className="px-6 py-4 text-eclipse-700">{new Date(inv.due_date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })}</td>
-                    <td className="px-6 py-4 font-medium text-eclipse-900">{formatRupiah(inv.amount)}</td>
-                    <td className="px-6 py-4">
-                      {getStatusBadge(inv.status)}
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
+         </div>
+         <button className="bg-[#111111] text-white px-6 py-3 rounded-xl text-sm font-bold hover:bg-gray-800 transition-colors flex items-center gap-2">
+           Upload Payment Proof
+           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>
+         </button>
       </div>
 
-      <div className="p-8 rounded-3xl bg-space-50 border border-eclipse-900/5">
-         <h3 className="text-sm font-bold text-eclipse-900 mb-2">Informasi Pembayaran</h3>
-         <p className="text-xs text-eclipse-700 mb-4 leading-relaxed max-w-2xl">
-            Sesuai kesepakatan studio, proyek dilanjutkan ke tahap akhir (termasuk hosting dan domain) setelah sisa pelunasan (INV-0262) dikonfirmasi. 
-            Silakan kirimkan bukti pembayaran ke email studio atau WhatsApp yang tercantum.
-         </p>
-         <div className="bg-white p-4 rounded-xl border border-eclipse-900/10 inline-block">
-            <div className="text-[10px] font-bold tracking-widest uppercase text-eclipse-700 mb-1">REKENING BANK BCA</div>
-            <div className="text-lg font-bold text-eclipse-900 font-mono tracking-tight">8732 199 028</div>
-            <div className="text-xs text-eclipse-700 mt-1">a.n Yunita Putri</div>
+      {/* 3 Summary Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+         {/* Card 1 */}
+         <div className="bg-purple-50/50 border border-purple-100 rounded-3xl p-8 relative overflow-hidden">
+            <div className="flex justify-between items-start mb-4">
+               <div className="text-[10px] font-bold tracking-widest uppercase text-gray-500">OUTSTANDING BALANCE</div>
+               <svg className="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" /></svg>
+            </div>
+            <div className="text-4xl font-medium text-gray-900 mb-4">{formatIDR(outstandingBalance)}</div>
+            <div className="text-[13px] text-gray-500">
+               Next due · {nextDue ? `${formatIDR(nextDue.amount)} on ${formatDate(nextDue.due_date)}` : 'None'}
+            </div>
+         </div>
+         
+         {/* Card 2 */}
+         <div className="bg-white border border-gray-200 rounded-3xl p-8">
+            <div className="text-[10px] font-bold tracking-widest uppercase text-gray-500 mb-4">PAID TO DATE</div>
+            <div className="text-4xl font-medium text-gray-900 mb-4">{formatIDR(paidToDate)}</div>
+            <div className="inline-flex bg-green-50 text-green-700 text-[11px] font-bold px-3 py-1 rounded-md">
+               DP received · 28 Sep 2026
+            </div>
+         </div>
+
+         {/* Card 3 */}
+         <div className="bg-white border border-gray-200 rounded-3xl p-8">
+            <div className="text-[10px] font-bold tracking-widest uppercase text-gray-500 mb-4">PROJECT TOTAL</div>
+            <div className="text-4xl font-medium text-gray-900 mb-4">{formatIDR(projectTotal)}</div>
+            <div className="text-[13px] text-gray-500">
+               Professional package · 3 payment milestones
+            </div>
          </div>
       </div>
+
+      {/* Invoice Table */}
+      <div className="bg-white border border-gray-200 rounded-3xl p-8">
+         <div className="flex items-center justify-between mb-8">
+            <h3 className="text-xl font-medium text-gray-900">Your invoices</h3>
+            <div className="flex gap-4">
+               <span className="bg-purple-50 text-purple-700 text-[11px] font-bold px-3 py-1.5 rounded-full">All invoices · {invoices.length}</span>
+               <button className="text-[13px] font-bold text-gray-900 flex items-center gap-2 hover:text-purple-600 transition-colors">
+                  Download all
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+               </button>
+            </div>
+         </div>
+
+         <div className="overflow-x-auto">
+            <table className="w-full text-left text-[13px]">
+               <thead>
+                  <tr className="text-[10px] uppercase tracking-widest text-gray-400 border-b border-gray-100">
+                     <th className="pb-4 font-bold w-[15%]">INVOICE</th>
+                     <th className="pb-4 font-bold w-[20%]">PAYMENT TYPE</th>
+                     <th className="pb-4 font-bold w-[20%]">AMOUNT</th>
+                     <th className="pb-4 font-bold w-[20%]">DUE DATE</th>
+                     <th className="pb-4 font-bold w-[15%]">STATUS</th>
+                     <th className="pb-4 font-bold text-right w-[10%]">ACTION</th>
+                  </tr>
+               </thead>
+               <tbody className="divide-y divide-gray-50">
+                  {invoices.map(invoice => (
+                     <tr key={invoice.id} className="group">
+                        <td className="py-6 font-bold text-gray-900">{invoice.invoice_number}</td>
+                        <td className="py-6 text-gray-600">{invoice.type === 'dp' ? 'DP' : invoice.type === 'installment' ? 'Installment' : 'Full Payment'}</td>
+                        <td className="py-6 font-medium text-gray-900">{formatIDR(invoice.amount)}</td>
+                        <td className="py-6 text-gray-500">{formatDate(invoice.due_date)}</td>
+                        <td className="py-6">
+                           <span className={`text-[11px] font-medium px-3 py-1 rounded-full ${
+                              invoice.status === 'paid' ? 'bg-green-50 text-green-700' :
+                              invoice.status === 'overdue' ? 'bg-red-50 text-red-700' :
+                              'bg-orange-50 text-orange-700'
+                           }`}>
+                              {invoice.status === 'paid' ? 'Paid' : invoice.status === 'unpaid' ? 'Awaiting payment' : invoice.status}
+                           </span>
+                        </td>
+                        <td className="py-6 text-right">
+                           <button className="text-gray-400 hover:text-gray-900 transition-colors p-2">
+                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+                           </button>
+                        </td>
+                     </tr>
+                  ))}
+               </tbody>
+            </table>
+            <div className="pt-4 text-[11px] text-gray-400 mt-2 border-t border-gray-100">
+               Showing {invoices.length} of {invoices.length} invoices · Amounts in Indonesian Rupiah (IDR)
+            </div>
+         </div>
+      </div>
+
+      {/* Bottom Section */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+         {/* Bank Details */}
+         <div className="bg-gray-50 border border-gray-200 rounded-3xl p-8">
+            <div className="flex items-center justify-between mb-8">
+               <h3 className="text-xl font-medium text-gray-900">A simple way to pay.</h3>
+               <span className="bg-gray-200/50 text-gray-600 text-[11px] font-medium px-3 py-1 rounded-full">Bank transfer</span>
+            </div>
+            <div className="flex gap-12 mb-8">
+               <div>
+                  <div className="text-[10px] font-bold tracking-widest uppercase text-gray-500 mb-2">BANK CENTRAL ASIA (BCA)</div>
+                  <div className="text-2xl font-medium text-gray-900 mb-1">123 456 7890</div>
+                  <div className="text-[13px] text-gray-600">PT Yunivrz Kreatif Indonesia</div>
+               </div>
+               <div>
+                  <div className="text-[10px] font-bold tracking-widest uppercase text-gray-500 mb-2">PAYMENT REFERENCE</div>
+                  <div className="text-sm font-medium text-gray-900 mb-1">{nextDue?.invoice_number || 'INV-XXXX'} / {invoices[0]?.project?.client?.name || 'Client'}</div>
+                  <button className="text-[11px] text-purple-600 font-medium hover:text-purple-700 flex items-center gap-1">
+                     Copy account details <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
+                  </button>
+               </div>
+            </div>
+            <p className="text-[11px] text-gray-500">Please include the invoice number in your transfer notes. Payments are verified within one working day.</p>
+         </div>
+
+         {/* Upload Proof */}
+         <div className="bg-white border border-gray-200 rounded-3xl p-8 flex flex-col justify-between">
+            <div>
+               <div className="w-10 h-10 rounded-full bg-purple-50 text-purple-500 flex items-center justify-center mb-6">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" /></svg>
+               </div>
+               <h3 className="text-xl font-medium text-gray-900 mb-3">Already made a transfer?</h3>
+               <p className="text-[13px] text-gray-500 leading-relaxed mb-6">
+                  Upload a receipt or screenshot so we can match your payment. JPG, PNG or PDF, up to 10 MB.
+               </p>
+            </div>
+            <button className="w-full sm:w-auto self-start border border-gray-200 text-gray-900 px-6 py-3 rounded-xl text-sm font-bold hover:bg-gray-50 transition-colors flex items-center gap-2">
+               Upload Payment Proof
+               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>
+            </button>
+         </div>
+      </div>
+      
+      {/* Footer text */}
+      <div className="flex items-center gap-2 text-[11px] text-gray-500 pt-4">
+         <svg className="w-4 h-4 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+         Secure records, clear milestones. Questions about an invoice? <a href="#" className="text-purple-600 hover:underline">Contact Maya &rarr;</a>
+      </div>
+
     </div>
   );
 }
